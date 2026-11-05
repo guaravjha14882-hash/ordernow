@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kids Fashion Store</title>
+<style>
+:root{--pink:#f4338b;--ink:#222;--muted:#777;--bg:#f6f6f6}
+*{box-sizing:border-box}body{margin:0;font-family:Arial, sans-serif;background:var(--bg);color:var(--ink)}
+header{background:#fff;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #0001}
+.top{max-width:1200px;margin:auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{font-size:22px;font-weight:800;color:var(--pink)}.tag{font-size:12px;color:var(--muted)}
+.hero{background:linear-gradient(110deg,#fff0f7,#fff);padding:22px 16px;text-align:center}
+.hero h1{margin:0 0 6px;font-size:25px}.hero p{margin:0;color:#666;font-size:14px}
+.wrap{max-width:1200px;margin:18px auto;padding:0 12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px #0000000c;cursor:pointer}
+.card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.info{padding:10px}.name{font-size:14px;font-weight:600;min-height:34px}
+.price{margin:7px 0 9px;font-weight:800;font-size:18px}.old{font-size:12px;color:#999;text-decoration:line-through;font-weight:400;margin-left:5px}
+.order{width:100%;border:0;border-radius:6px;padding:11px 8px;background:var(--pink);color:white;font-weight:700;font-size:14px;cursor:pointer}
+.delivery{font-size:11px;color:#39834a;margin-top:7px}
+footer{text-align:center;padding:22px;color:#777;font-size:12px}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:10;overflow:auto;padding:18px}
+.modal.show{display:flex;align-items:center;justify-content:center}
+.detail{width:min(900px,100%);background:#fff;border-radius:12px;overflow:hidden;position:relative;display:grid;grid-template-columns:1fr 1fr}
+.detail img{width:100%;height:100%;max-height:560px;object-fit:contain;background:#f8f8f8}
+.detail-info{padding:28px 22px}.close{position:absolute;right:12px;top:10px;border:0;background:#fff;border-radius:50%;width:34px;height:34px;font-size:22px;cursor:pointer}
+.detail h2{font-size:23px;margin:12px 0}.detail .price{font-size:25px}
+.field{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;margin:7px 0;font-size:14px}
+.cod{padding:11px;background:#f5fff6;border:1px solid #d8efdc;border-radius:6px;font-size:13px;margin:10px 0}
+.actions{display:grid;gap:9px;margin-top:14px}
+.whatsapp{display:block;text-align:center;text-decoration:none;background:#25d366;color:#fff;padding:13px;border-radius:6px;font-weight:700}
+.buy{background:var(--pink);color:white;border:0;padding:13px;border-radius:6px;font-weight:700;cursor:pointer}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.hero h1{font-size:32px}}
+@media(min-width:950px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:600px){.detail{grid-template-columns:1fr;max-width:430px}.detail img{max-height:360px}.detail-info{padding:18px}.modal{padding:10px}}
+</style>
+</head>
+<body>
+<header><div class="top"><div><div class="logo">KIDS FASHION</div><div class="tag">Trendy styles • Best prices</div></div><div class="tag">Cash on Delivery available*</div></div></header>
+<section class="hero"><h1>Kids Wear Collection</h1><p>Stylish T-shirt & Shorts Sets — ₹200 से ₹349 तक</p></section>
+<main class="wrap"><div class="grid" id="products"></div></main>
+<footer>*Cash on Delivery order confirmation WhatsApp पर होगा।</footer>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="detail">
+    <button class="close" onclick="closeProduct()" aria-label="Close">×</button>
+    <img id="detailImg" src="" alt="Selected product">
+    <div class="detail-info">
+      <div class="tag">KIDS FASHION COLLECTION</div>
+      <h2 id="detailName"></h2>
+      <div class="price" id="detailPrice"></div>
+      <div class="cod">✓ Cash on Delivery (COD) उपलब्ध — WhatsApp पर ऑर्डर कन्फर्म करें।</div>
+      <input class="field" id="custName" placeholder="आपका नाम">
+      <input class="field" id="custPhone" placeholder="मोबाइल नंबर" inputmode="tel">
+      <input class="field" id="custAddress" placeholder="पूरा डिलीवरी पता">
+      <div class="actions">
+        <button class="buy" onclick="orderOnWhatsApp()">Order Now — Cash on Delivery</button>
+        <a class="whatsapp" id="whatsappLink" href="https://wa.me/917415735852?text=a%20im%20buy%20this%20order%20....%3F" target="_blank" rel="noopener">WhatsApp पर ऑर्डर करें</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const products = [
+ {name:"Spider-Man Yellow T-Shirt & Shorts Set",price:299,img:"images/spiderman-yellow.jpg"},
+ {name:"Spider-Man Yellow Set — Style 2",price:299,img:"images/spiderman-yellow-2.jpg"},
+ {name:"Spider-Man Black T-Shirt & Shorts Set",price:299,img:"images/spiderman-black.jpg"},
+ {name:"The Legend Football Blue Set",price:349,img:"images/football-blue.jpg"},
+ {name:"Yellow Stripe T-Shirt & Black Shorts Set",price:249,img:"images/yellow-stripe.jpg"},
+ {name:"Tokyo Green T-Shirt & Shorts Set",price:299,img:"images/tokyo-green.jpg"},
+ {name:"A Little Dirt Never Hurt Set",price:299,img:"images/dirt-orange.jpg"}
+];
+const grid=document.getElementById("products");
+let selected=null;
+products.forEach((p,i)=>{
+ const card=document.createElement("article");card.className="card";
+ card.innerHTML=`<img src="${p.img}" alt="${p.name}" loading="lazy"><div class="info"><div class="name">${p.name}</div><div class="price">₹${p.price}<span class="old">₹499</span></div><button class="order" type="button">View & Order</button><div class="delivery">✓ Cash on Delivery available</div></div>`;
+ card.addEventListener("click",()=>openProduct(i));grid.appendChild(card);
+});
+function makeWaUrl(message){return "https://wa.me/917415735852?text="+encodeURIComponent(message)}
+function openProduct(i){
+ selected=products[i];document.getElementById("detailImg").src=selected.img;
+ document.getElementById("detailName").textContent=selected.name;
+ document.getElementById("detailPrice").textContent="₹"+selected.price;
+ document.getElementById("whatsappLink").href="https://wa.me/917415735852?text=a%20im%20buy%20this%20order%20....%3F";
+ document.getElementById("modal").classList.add("show");
+ document.getElementById("modal").setAttribute("aria-hidden","false");
+}
+function closeProduct(){document.getElementById("modal").classList.remove("show");document.getElementById("modal").setAttribute("aria-hidden","true")}
+function orderOnWhatsApp(){
+ if(!selected)return;
+ const name=document.getElementById("custName").value.trim();
+ const phone=document.getElementById("custPhone").value.trim();
+ const address=document.getElementById("custAddress").value.trim();
+ const message=`Hello, I want to order:\nProduct: ${selected.name}\nPrice: ₹${selected.price}\nPayment: Cash on Delivery\nName: ${name}\nPhone: ${phone}\nAddress: ${address}`;
+ window.open(makeWaUrl(message),"_blank");
+}
+document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeProduct()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeProduct()});
+</script>
+</body>
+</html>
